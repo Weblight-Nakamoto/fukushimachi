@@ -137,15 +137,17 @@
                     </div>
 
                     <!-- 認証 -->
-                    <!-- <div class="form-item">
-                  <label for="employer_license">ふくしま介護の職場認証評価取得の有無</label>
-                  <select id="employer_license" v-model.number="f.certification_id">
-                    <option :value="null" disabled>選択してください</option>
-                    <option v-for="c in certList" :key="c.id" :value="c.id">{{ c.name }}</option>
-                  </select>
-                  <div class="note" v-if="certLoading">認証マスタを読み込み中…</div>
-                  <div class="msg-error" v-if="certErr">{{ certErr }}</div>
-                </div> -->
+                    <div class="form-item">
+                      <label for="employer_license">ふくしま介護の職場認証評価取得の有無</label>
+                      <select id="employer_license" v-model.number="f.certification_id">
+                        <option :value="0">なし</option>
+                        <option v-for="c in certList" :key="c.id" :value="Number(c.id)">
+                          {{ c.name }}
+                        </option>
+                      </select>
+                      <div class="note" v-if="certLoading">認証マスタを読み込み中…</div>
+                      <div class="msg-error" v-if="certErr">{{ certErr }}</div>
+                    </div>
 
                     <!-- 管理担当者 -->
                     <div class="form-items-subtitle txt-center">管理担当者について</div>
@@ -408,7 +410,7 @@ const f = ref({
   address_line1: "",
   address_line2: "",
   phone: "",
-  certification_id: null,
+  certification_id: 0,
   manager_last_name: "",
   manager_first_name: "",
   manager_last_name_kana: "",
@@ -496,7 +498,7 @@ function normalizeBusinessProfile(row) {
     address_line1: row.address_line1 ?? "",
     address_line2: row.address_line2 ?? "",
     phone: (row.phone ?? "").toString(),
-    certification_id: toNum(row.certification_id),
+    certification_id: toNum(row.certification_id) ?? 0,
     manager_last_name: row.manager_last_name ?? "",
     manager_first_name: row.manager_first_name ?? "",
     manager_last_name_kana: row.manager_last_name_kana ?? "",

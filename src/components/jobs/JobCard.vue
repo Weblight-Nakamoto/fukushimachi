@@ -626,6 +626,16 @@ const salaryDisplay = computed(() => {
   line-height: 1.25;
 }
 
+/* デスクトップ・共通の基本値 */
+.job-list-item__licence img {
+  position: relative;
+  top: 0px; /* 上へ（-で上）  値はお好みで調整 */
+  left: -55px; /* 左へ（-で左） 値はお好みで調整 */
+  height: 140px; /* 既に拡大している場合はそのまま/調整可 */
+  width: auto;
+  display: block;
+}
+
 /* ===== スマホは重なりを避けて通常フローに戻す（崩れ防止） ===== */
 @media (max-width: 640px) {
   .job-admin .job-list-item {
@@ -638,20 +648,16 @@ const salaryDisplay = computed(() => {
   .job-admin .job-list-item__title {
     padding-right: 0;
   }
+  .job-list-item__licence img {
+    top: -4px;
+    left: 0;
+    height: 80px;
+  }
 }
 
 /* 認証マークの位置微調整（上へ & 左へ） */
 .job-list-item__licence {
   align-self: flex-start; /* 行頭寄せで少し上側に */
-}
-
-.job-list-item__licence img {
-  position: relative;
-  top: -13px; /* 上へ（-で上）  値はお好みで調整 */
-  left: -25px; /* 左へ（-で左） 値はお好みで調整 */
-  height: 80px; /* 既に拡大している場合はそのまま/調整可 */
-  width: auto;
-  display: block;
 }
 
 /* サムネイル枠のサイズを固定 */

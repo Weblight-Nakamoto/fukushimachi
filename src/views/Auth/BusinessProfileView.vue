@@ -179,22 +179,31 @@
                   </div>
 
                   <!-- 認証 ※2026年2月まで非表示にする-->
-                  <!-- <div class="form-item">
-                  <label for="employer_license">認証評価取得の有無</label>
-                  <select id="employer_license" name="employer_license" v-model.number="f.certification_id">
-                    <option :value="null" disabled>選択してください</option>
-                    <option v-for="c in certList" :key="c.id" :value="c.id">{{ c.name }}</option>
-                  </select>
-                  <ul class="note indent">
-                    <li>※登録した求人情報に認証マークが表示されます。</li>
-                    <li>
-                      ※認証制度は申請が必要となります。<br />
-                      <a href="https://www.eidell.co.jp/fukushima-kaigo/" target="_blank" rel="noopener noreferrer">詳しくはこちらから</a>
-                    </li>
-                  </ul>
-                  <div class="note" v-if="certLoading">認証マスタを読み込み中…</div>
-                  <div class="msg-error" v-if="certErr">{{ certErr }}</div>
-                </div> -->
+                  <div class="form-item">
+                    <label for="employer_license">認証評価取得の有無</label>
+                    <select
+                      id="employer_license"
+                      name="employer_license"
+                      v-model.number="f.certification_id"
+                    >
+                      <option :value="null" disabled>選択してください</option>
+                      <option v-for="c in certList" :key="c.id" :value="c.id">{{ c.name }}</option>
+                    </select>
+                    <ul class="note indent">
+                      <li>※登録した求人情報に認証マークが表示されます。</li>
+                      <li>
+                        ※認証制度は申請が必要となります。<br />
+                        <a
+                          href="https://www.eidell.co.jp/fukushima-kaigo/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          >詳しくはこちらから</a
+                        >
+                      </li>
+                    </ul>
+                    <div class="note" v-if="certLoading">認証マスタを読み込み中…</div>
+                    <div class="msg-error" v-if="certErr">{{ certErr }}</div>
+                  </div>
 
                   <!-- 管理担当者 -->
                   <div class="form-items-subtitle txt-center">管理担当者について</div>
@@ -364,23 +373,28 @@
                       </div>
 
                       <!-- 認証取得 ※2026年2月まで非表示にする -->
-                      <!-- <div class="conf-item">
-                      <div class="user_cert">
-                        <span class="label-name">ふくしま介護の職場認証評価取得の有無</span>
-                        <span class="conf-result">
-                          {{ certName || '選択なし' }}
-                          <template v-if="certName">
-                            <div class="note indent" style="margin-top:6px;">
-                              認証には福島県への申請が必要です。<br />
-                              求人には認証マークが表示されます。
-                            </div>
-                            <div style="margin-top:8px;">
-                              <img v-if="certMarkSrc" :src="certMarkSrc" alt="認証マーク" style="width:90px;height:auto;" />
-                            </div>
-                          </template>
-                        </span>
+                      <div class="conf-item">
+                        <div class="user_cert">
+                          <span class="label-name">ふくしま介護の職場認証評価取得の有無</span>
+                          <span class="conf-result">
+                            {{ certName || "選択なし" }}
+                            <template v-if="certName">
+                              <div class="note indent" style="margin-top: 6px">
+                                認証には福島県への申請が必要です。<br />
+                                求人には認証マークが表示されます。
+                              </div>
+                              <div style="margin-top: 8px">
+                                <img
+                                  v-if="certMarkSrc"
+                                  :src="certMarkSrc"
+                                  alt="認証マーク"
+                                  style="width: 90px; height: auto"
+                                />
+                              </div>
+                            </template>
+                          </span>
+                        </div>
                       </div>
-                    </div> -->
 
                       <div class="conf-item flex">
                         <div class="user_manager_ln">
@@ -450,58 +464,6 @@
       <!-- 共通フッター -->
       <AppFooter />
     </div>
-
-    <!-- <div class="body-bg pc">
-    <img src="/src/assets/images/common/bg-pc.png" alt>
-  </div>
-
-  <div class="hero-copy pc">
-    <img src="/src/assets/images/home/hero-copy.svg" alt="はなして、わかって、マッチする。あたらしい介護の就活。">
-  </div>
-
-  <div class="pc">
-    <h1 class="sitelogo guest-content">
-      <a href="/">
-        <img src ="/src/assets/images/common/sitelogo.svg" alt="ふくしま介護福祉就職情報サイト「ふくしまち」">
-      </a>
-    </h1>
-
-    <h1 class="sitelogo user-content">
-      <a href="/user">
-        <img src ="/src/assets/images/common/sitelogo.svg" alt="ふくしま介護福祉就職情報サイト「ふくしまち」">
-      </a>
-    </h1>
-
-    <h1 class="sitelogo employer-content">
-      <a href="/employer">
-        <img src ="/src/assets/images/common/sitelogo.svg" alt="ふくしま介護福祉就職情報サイト「ふくしまち」">
-      </a>
-    </h1>
-  </div>
-
-  <div class="pc">
-    <div class="user-content login-content">
-      <div class="mypage-link">
-        <a href="/user/mypage">
-          <div class="mypage-link-tmb">
-            <img src="/src/assets/images/common/ico-user.svg" alt="マイページ">
-          </div>
-          <span class="mypage-link-txt">マイページ</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="employer-content login-content">
-      <div class="mypage-link">
-        <a href="/employer/mypage">
-          <div class="mypage-link-tmb">
-            <img src="/src/assets/images/common/ico-user.svg" alt="マイページ">
-          </div>
-          <span class="mypage-link-txt">マイページ</span>
-        </a>
-      </div>
-    </div>
-  </div> -->
   </body>
   <PcModel />
 </template>
@@ -511,8 +473,8 @@ import { ref, onMounted, computed, nextTick } from "vue";
 import { reactive, watch } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
-// import lcStandard from '@/assets/lc-standard.svg' //2026年2月まで非表示
-// import lcHigh from '@/assets/lc-highi.svg'//2026年2月まで非表示
+import lcStandard from "@/assets/lc-standard.svg"; //2026年2月まで非表示
+import lcHigh from "@/assets/lc-highi.svg"; //2026年2月まで非表示
 
 /* 共通ヘッダー／フッター */
 import AppHeader from "@/components/layout/AppHeader.vue";
@@ -738,17 +700,17 @@ const prefectureName = computed(() => {
 });
 
 // 表示用：認証名称＆マーク ※2026年2月まで非表示
-// const certName = computed(() => {
-//   const c = certList.value.find(x => Number(x.id) === Number(f.value.certification_id))
-//   return c?.name || ''
-// })
-// const certMarkSrc = computed(() => {
-//   const n = certName.value
-//   if (!n) return null
-//   if (n.includes('ハイレベル')) return lcHigh
-//   if (n.includes('スタンダード')) return lcStandard
-//   return null
-// })
+const certName = computed(() => {
+  const c = certList.value.find((x) => Number(x.id) === Number(f.value.certification_id));
+  return c?.name || "";
+});
+const certMarkSrc = computed(() => {
+  const n = certName.value;
+  if (!n) return null;
+  if (n.includes("ハイレベル")) return lcHigh;
+  if (n.includes("スタンダード")) return lcStandard;
+  return null;
+});
 
 // 入力サニタイズ
 function sanitizePayload(raw) {
