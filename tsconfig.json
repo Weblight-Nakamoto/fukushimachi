@@ -12,15 +12,13 @@
     "lib": ["ES2022", "DOM"],
     "skipLibCheck": true,
     "types": ["vite/client", "vite-plugin-pwa/client"],
-    "baseUrl": ".",
+    // "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
 
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"],
 
-  "references": [
-    { "path": "./tsconfig.node.json" }
-  ]
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

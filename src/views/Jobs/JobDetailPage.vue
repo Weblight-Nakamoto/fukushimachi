@@ -102,71 +102,6 @@
                 <p v-if="item.pr_message" class="job-item__pr" v-text="item.pr_message" />
               </section>
 
-              <div class="action-items flex" v-if="!isEmployer">
-                <!-- クリップ -->
-                <div class="action-item action-item-clip" :class="{ 'is-active': clipped }">
-                  <div
-                    class="js-modal-trigger"
-                    aria-controls="modal-clip"
-                    role="button"
-                    tabindex="0"
-                    :aria-pressed="clipped ? 'true' : 'false'"
-                    aria-label="クリップ"
-                    @click.stop.prevent="toggleClip"
-                    @keydown.enter.stop.prevent="toggleClip"
-                    @keydown.space.stop.prevent="toggleClip"
-                  >
-                    <div class="icon">
-                      <img src="/src/assets/images/common/ico-clip.svg" alt="" />
-                    </div>
-                    <div class="icon-txt">
-                      <img src="/src/assets/images/common/ico-clip-txt.svg" alt="クリップ" />
-                    </div>
-                  </div>
-                </div>
-
-                <!-- グッド -->
-                <div class="action-item action-item-good" :class="{ 'is-active': gooded }">
-                  <div
-                    class="js-modal-trigger"
-                    aria-controls="modal-good"
-                    role="button"
-                    tabindex="0"
-                    :aria-pressed="gooded ? 'true' : 'false'"
-                    aria-label="グッド"
-                    @click.stop.prevent="toggleGood"
-                    @keydown.enter.stop.prevent="toggleGood"
-                    @keydown.space.stop.prevent="toggleGood"
-                  >
-                    <div class="icon">
-                      <img src="/src/assets/images/common/ico-good.svg" alt="" />
-                    </div>
-                    <div class="icon-txt">
-                      <img src="/src/assets/images/common/ico-good-txt.svg" alt="グッド" />
-                    </div>
-                  </div>
-                </div>
-
-                <!-- トーク -->
-                <div class="action-item action-item-talk" :class="{ 'is-active': talked }">
-                  <a
-                    href="../talk/id000.php"
-                    role="button"
-                    tabindex="0"
-                    @click.prevent="openTalk"
-                    @keydown.enter.prevent="openTalk"
-                    @keydown.space.prevent="openTalk"
-                  >
-                    <div class="icon">
-                      <img src="/src/assets/images/common/ico-talk.svg" alt="" />
-                    </div>
-                    <div class="icon-txt">
-                      <img src="/src/assets/images/common/ico-talk-txt.svg" alt="トーク" />
-                    </div>
-                  </a>
-                </div>
-              </div>
-
               <!-- 募集内容 -->
               <section class="job-item__detail">
                 <div class="job-item__detail-title sec-title">募集内容</div>
@@ -237,72 +172,6 @@
                   >
                   </iframe>
                 </div>
-
-                <!-- クリップ・グッド・トーク ※事業者は非表示 -->
-                <div class="action-items flex" v-if="!isEmployer">
-                  <!-- クリップ -->
-                  <div class="action-item action-item-clip" :class="{ 'is-active': clipped }">
-                    <div
-                      class="js-modal-trigger"
-                      aria-controls="modal-clip"
-                      role="button"
-                      tabindex="0"
-                      :aria-pressed="clipped ? 'true' : 'false'"
-                      aria-label="クリップ"
-                      @click.stop.prevent="toggleClip"
-                      @keydown.enter.stop.prevent="toggleClip"
-                      @keydown.space.stop.prevent="toggleClip"
-                    >
-                      <div class="icon">
-                        <img src="/src/assets/images/common/ico-clip.svg" alt="" />
-                      </div>
-                      <div class="icon-txt">
-                        <img src="/src/assets/images/common/ico-clip-txt.svg" alt="クリップ" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- グッド -->
-                  <div class="action-item action-item-good" :class="{ 'is-active': gooded }">
-                    <div
-                      class="js-modal-trigger"
-                      aria-controls="modal-good"
-                      role="button"
-                      tabindex="0"
-                      :aria-pressed="gooded ? 'true' : 'false'"
-                      aria-label="グッド"
-                      @click.stop.prevent="toggleGood"
-                      @keydown.enter.stop.prevent="toggleGood"
-                      @keydown.space.stop.prevent="toggleGood"
-                    >
-                      <div class="icon">
-                        <img src="/src/assets/images/common/ico-good.svg" alt="" />
-                      </div>
-                      <div class="icon-txt">
-                        <img src="/src/assets/images/common/ico-good-txt.svg" alt="グッド" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- トーク -->
-                  <div class="action-item action-item-talk">
-                    <a
-                      href="../talk/id000.php"
-                      role="button"
-                      tabindex="0"
-                      @click.prevent="openTalk"
-                      @keydown.enter.prevent="openTalk"
-                      @keydown.space.prevent="openTalk"
-                    >
-                      <div class="icon">
-                        <img src="/src/assets/images/common/ico-talk.svg" alt="" />
-                      </div>
-                      <div class="icon-txt">
-                        <img src="/src/assets/images/common/ico-talk-txt.svg" alt="トーク" />
-                      </div>
-                    </a>
-                  </div>
-                </div>
               </section>
 
               <div class="related-link" v-if="items.length">
@@ -345,6 +214,77 @@
       <AppFooter />
     </div>
   </body>
+
+  <!-- 求人詳細ページ用：右固定アクションヘッダー -->
+  <div
+    v-if="showJobActionHeader"
+    class="job-action-header"
+    :class="{ 'is-open': actionHeaderOpen }"
+  >
+    <div class="job-action-content" :class="{ 'is-open': actionHeaderOpen }">
+      <button type="button" class="job-action-tag" @click="toggleActionHeader">
+        アクション<span class="allow"></span>
+      </button>
+
+      <div class="job-action-menu">
+        <button
+          type="button"
+          class="job-action-link clip"
+          :class="{ active: clipped }"
+          :disabled="clipProcessing"
+          @click="onActionClip"
+        >
+          <img src="/src/assets/images/common/ico-clip.svg" alt="" />
+          <span>{{ clipped ? "解除する" : "クリップする" }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="job-action-link good"
+          :class="{ active: gooded }"
+          :disabled="goodProcessing"
+          @click="onActionGood"
+        >
+          <img src="/src/assets/images/common/ico-good.svg" alt="" />
+          <span>{{ gooded ? "解除する" : "グッドする" }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="job-action-link talk"
+          :class="{ active: talked }"
+          :disabled="talkProcessing || applying || visiting"
+          @click="onActionTalk"
+        >
+          <img src="/src/assets/images/common/ico-talk.svg" alt="" />
+          <span>{{ talkProcessing ? "遷移中…" : "トークする" }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="job-action-link inspection"
+          :disabled="talkProcessing || applying || visiting"
+          @click="visitJob"
+        >
+          <!-- <span class="job-action-icon-text">見</span> -->
+          <img src="/src/assets/images/common/inspection.svg" alt="" />
+          <span>{{ visiting ? "遷移中…" : "見学希望" }}</span>
+        </button>
+
+        <button
+          type="button"
+          class="job-action-link apply"
+          :disabled="talkProcessing || applying || visiting"
+          @click="applyToJob"
+        >
+          <!-- <span class="job-action-icon-text">応</span> -->
+          <img src="/src/assets/images/common/apply.svg" alt="" />
+          <span>{{ applying ? "遷移中…" : "応募する" }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <PcModel />
 </template>
 
@@ -420,9 +360,32 @@ const userId = (() => {
 
 const userTypeRef = ref((localStorage.getItem("userType") || "").toLowerCase());
 const isEmployer = computed(() => userTypeRef.value === "employer");
+const isSeeker = computed(() => userTypeRef.value === "seeker");
+
+// 応募・見学ボタン制御
+const applying = ref(false);
+const visiting = ref(false);
 
 const SITE_NAME = "ふくしまち";
 const DEFAULT_DESC = "福島県の介護の就職・転職情報サイト「ふくしまち」。";
+
+// 右固定アクションヘッダー制御
+const actionHeaderOpen = ref(false);
+const clipProcessing = ref(false);
+const goodProcessing = ref(false);
+const talkProcessing = ref(false);
+
+const showJobActionHeader = computed(() => {
+  return !!item.value && !isEmployer.value;
+});
+
+const toggleActionHeader = () => {
+  actionHeaderOpen.value = !actionHeaderOpen.value;
+};
+
+const closeActionHeader = () => {
+  actionHeaderOpen.value = false;
+};
 
 const stripTags = (s = "") =>
   String(s)
@@ -734,6 +697,18 @@ const ensureLogin = () => {
   }
   return true;
 };
+
+const ensureSeekerLogin = () => {
+  if (!ensureLogin()) return false;
+
+  if (!isSeeker.value) {
+    showToast("応募は求職者アカウントでログインしてください");
+    return false;
+  }
+
+  return true;
+};
+
 const goodConfirmOpen = ref(false);
 const toggleClip = async () => {
   if (!ensureLogin()) return;
@@ -788,23 +763,118 @@ const confirmGood = async () => {
   }
 };
 
-const openTalk = async () => {
-  if (!ensureLogin()) return;
+const onActionClip = async () => {
+  if (clipProcessing.value) return;
+
+  clipProcessing.value = true;
+
   try {
-    const jobId = item.value.id;
+    await toggleClip();
+    closeActionHeader();
+  } finally {
+    clipProcessing.value = false;
+  }
+};
+
+const onActionGood = async () => {
+  if (goodProcessing.value) return;
+
+  goodProcessing.value = true;
+
+  try {
+    await toggleGood();
+    closeActionHeader();
+  } finally {
+    goodProcessing.value = false;
+  }
+};
+
+const onActionTalk = async () => {
+  if (talkProcessing.value) return;
+
+  talkProcessing.value = true;
+
+  try {
+    await openTalk();
+    closeActionHeader();
+  } finally {
+    talkProcessing.value = false;
+  }
+};
+
+/**
+ * 応募時にトーク画面の入力欄へ貼り付ける初期文
+ */
+const buildApplicationDraft = () => {
+  const facility = String(
+    item.value?.facility_name || item.value?.business_name || item.value?.company_name || "",
+  ).trim();
+
+  const title = String(item.value?.title || item.value?.job_title || "").trim();
+
+  const target = [facility, title].filter(Boolean).join(" / ");
+
+  return target
+    ? `こちらの求人（${target}）に応募したいです。よろしくお願いいたします。`
+    : "こちらの求人に応募したいです。よろしくお願いいたします。";
+};
+
+/**
+ * 見学時にトーク画面の入力欄へ貼り付ける初期文
+ */
+const buildVisitDraft = () => {
+  const facility = String(
+    item.value?.facility_name || item.value?.business_name || item.value?.company_name || "",
+  ).trim();
+
+  const title = String(item.value?.title || item.value?.job_title || "").trim();
+
+  const target = [facility, title].filter(Boolean).join(" / ");
+
+  return target
+    ? `こちらの求人（${target}）の見学を希望します。よろしくお願いいたします。`
+    : "見学希望です。よろしくお願いいたします。";
+};
+
+/**
+ * トークスレッドを作成または取得して、求職者トーク画面へ遷移
+ */
+const startTalkAndMove = async ({ applicationDraft = "", requireSeeker = false } = {}) => {
+  if (requireSeeker) {
+    if (!ensureSeekerLogin()) return false;
+  } else if (!ensureLogin()) {
+    return false;
+  }
+
+  try {
+    const jobId = item.value?.id || route.params.id;
+
     const { data } = await API.post("/talks/start", {
       job_information_id: jobId,
       seeker_user_id: userId,
     });
+
     const threadId = data?.threadId || data?.id;
+
     if (!threadId) {
       showToast("トーク開始に失敗しました");
-      return;
+      return false;
     }
+
     talked.value = true;
-    router.push({ name: "SeekerTalk", params: { threadId } });
+
+    const query = applicationDraft ? { applicationDraft } : {};
+
+    await router.push({
+      name: "SeekerTalk",
+      params: { threadId },
+      query,
+    });
+
+    return true;
   } catch (e) {
     const code = e?.response?.data?.error;
+
     if (code === "job_not_found") {
       showToast("求人が見つかりません（非公開/削除の可能性）");
     } else if (code === "business_profile_not_found") {
@@ -813,6 +883,55 @@ const openTalk = async () => {
       console.error(e);
       showToast("通信エラーが発生しました");
     }
+
+    return false;
+  }
+};
+
+/**
+ * 既存トークボタン押下時
+ */
+const openTalk = async () => {
+  await startTalkAndMove();
+};
+
+/**
+ * 固定応募ボタン押下時
+ */
+const applyToJob = async () => {
+  if (applying.value) return;
+
+  applying.value = true;
+
+  try {
+    await startTalkAndMove({
+      applicationDraft: buildApplicationDraft(),
+      requireSeeker: true,
+    });
+
+    closeActionHeader();
+  } finally {
+    applying.value = false;
+  }
+};
+
+/**
+ * 固定見学ボタン押下時
+ */
+const visitJob = async () => {
+  if (visiting.value) return;
+
+  visiting.value = true;
+
+  try {
+    await startTalkAndMove({
+      applicationDraft: buildVisitDraft(),
+      requireSeeker: true,
+    });
+
+    closeActionHeader();
+  } finally {
+    visiting.value = false;
   }
 };
 
@@ -1192,6 +1311,38 @@ watch(
   word-break: break-word; /* 長い単語・URLのはみ出し対策（任意） */
 }
 
+/*
+
+@media (max-width: 640px) {
+  .job-fixed-actions {
+    right: 12px;
+    top: 60%;
+    gap: 10px;
+  }
+
+  .job-fixed-actions__button {
+    width: 74px;
+    height: 74px;
+    min-height: auto;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 640px) {
+  .job-fixed-actions {
+    right: 12px;
+    top: 60%;
+    gap: 10px;
+  }
+
+  .job-fixed-actions__button {
+    width: 74px;
+    height: 74px;
+    min-height: auto;
+    font-size: 15px;
+  }
+} */
+
 /* スマホは折り返してバッジを下に（任意） */
 @media (max-width: 640px) {
   .job-item__jobtype-row {
@@ -1204,6 +1355,248 @@ watch(
     margin-top: -20px;
     margin-bottom: -190px;
     z-index: 99;
+  }
+}
+
+/* =========================================================
+   求人詳細ページ：右固定アクションヘッダー
+========================================================= */
+.job-action-header {
+  position: fixed;
+  top: var(--header-height, 80px);
+  right: 0;
+  z-index: 3000;
+  width: 80px;
+  pointer-events: auto;
+}
+
+.job-action-hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 80px;
+  height: 80px;
+  margin-left: auto;
+  border: none;
+  border-bottom-left-radius: 15px;
+  cursor: pointer;
+  padding: 31px 20px;
+  background-color: #ffff00;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.job-action-hamburger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: #000;
+}
+
+.job-action-content {
+  position: fixed;
+  top: calc(var(--header-height, 80px) + 80px);
+  right: 0;
+  width: fit-content;
+  height: auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  transition: right 0.5s ease;
+  box-sizing: border-box;
+}
+
+.job-action-content.is-open {
+  right: -80px;
+}
+
+.job-action-tag {
+  background-color: #ffff00;
+  border: none;
+  font-size: 12px;
+  writing-mode: vertical-lr;
+  padding: 30px 10px;
+  white-space: nowrap;
+  width: fit-content;
+  border-bottom-left-radius: 15px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.job-action-tag .allow {
+  display: inline-block;
+  position: relative;
+  width: 12px;
+  height: 12px;
+  vertical-align: middle;
+}
+
+.job-action-tag .allow::after {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border-top: 1.5px solid #000;
+  border-right: 1.5px solid #000;
+  transition: transform 0.3s ease;
+  transform: rotate(45deg);
+}
+
+.job-action-content.is-open .job-action-tag .allow::after {
+  transform: rotate(225deg);
+}
+
+.job-action-menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.job-action-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 80px;
+  height: 100px;
+  border: none;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.35;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.job-action-link img {
+  width: auto;
+  height: 42px;
+}
+
+.job-action-link span {
+  display: block;
+  text-align: center;
+  font-weight: 700;
+}
+
+.job-action-link.clip {
+  background-color: #ff8363;
+}
+
+.job-action-link.good {
+  background-color: #ff9c7d;
+}
+
+.job-action-link.talk,
+.job-action-link.inspection,
+.job-action-link.apply {
+  background-color: #ffb883;
+  position: relative;
+}
+
+.job-action-link.talk::before,
+.job-action-link.inspection::before,
+.job-action-link.apply::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  width: 80%;
+  border-top: 1.5px #fff dashed;
+}
+
+.job-action-link.apply {
+  border-bottom-left-radius: 15px;
+}
+
+.job-action-link.active img {
+  filter: brightness(0) invert(1);
+}
+
+.job-action-link:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.job-action-icon-text {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* クリップ・グッド・トークのアイコンだけ少し大きくする */
+.job-action-link.clip img,
+.job-action-link.good img,
+.job-action-link.talk img {
+  height: 52px;
+}
+
+@media screen and (max-width: 800px) {
+  .job-action-header {
+    top: var(--header-height, 70px);
+    width: 70px;
+  }
+
+  .job-action-hamburger {
+    width: 70px;
+    height: 70px;
+    border-bottom-left-radius: 20px;
+    padding: 26px 17px;
+  }
+
+  .job-action-hamburger span {
+    height: 2px;
+  }
+
+  .job-action-content {
+    top: calc(var(--header-height, 70px) + 70px);
+  }
+
+  .job-action-content.is-open {
+    right: -70px;
+  }
+
+  .job-action-link {
+    gap: 11px;
+    width: 70px;
+    font-size: 11px;
+  }
+
+  .job-action-tag {
+    font-size: 11px;
+    border-bottom-left-radius: 15px;
+  }
+
+  .job-action-tag .allow {
+    width: 11px;
+    height: 11px;
+  }
+
+  .job-action-tag .allow::after {
+    top: 11px;
+    width: 5.5px;
+    height: 5.5px;
+  }
+
+  .job-action-icon-text {
+    width: 30px;
+    height: 30px;
+    font-size: 17px;
+  }
+
+  .job-action-link.apply {
+    border-bottom-left-radius: 15px;
   }
 }
 </style>

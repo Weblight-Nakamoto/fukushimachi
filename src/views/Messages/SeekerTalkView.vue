@@ -9,53 +9,67 @@
       :header-title="jobTitle"
       :sub-title="businessName"
       :back-to="backTo"
+      :initial-draft="applicationDraft"
     />
   </div>
-    <PcModel />
+  <PcModel />
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { http } from '@/api/http'
-import TalkPanel from '@/components/talk/TalkPanel.vue'
-import PcModel from '@/components/layout/PcModel.vue'
+import { onMounted, ref, computed } from "vue";
+import { useRoute } from "vue-router";
+import { http } from "@/api/http";
+import TalkPanel from "@/components/talk/TalkPanel.vue";
+import PcModel from "@/components/layout/PcModel.vue";
 
-const route = useRoute()
-const userId = Number(localStorage.getItem('userId'))
-const jobTitle = ref('')
-const businessName = ref('')
-const backTo = ref('')
+const route = useRoute();
+
+const applicationDraft = computed(() => {
+  const raw = route.query.applicationDraft;
+
+  if (Array.isArray(raw)) {
+    return String(raw[0] || "");
+  }
+
+  return String(raw || "");
+});
+
+const userId = Number(localStorage.getItem("userId"));
+const jobTitle = ref("");
+const businessName = ref("");
+const backTo = ref("");
 
 onMounted(async () => {
-  const threadId = Number(route.params.threadId)
+  const threadId = Number(route.params.threadId);
   try {
     // メタAPIで見出しと戻り先を取得
-    const { data } = await http.get(`/talks/${threadId}/meta`)
-    const m = data?.meta
+    const { data } = await http.get(`/talks/${threadId}/meta`);
+    const m = data?.meta;
     if (m) {
-      jobTitle.value = m.job_title || ''
-      businessName.value = m.facility_name || ''
+      jobTitle.value = m.job_title || "";
+      businessName.value = m.facility_name || "";
       // backTo.value = m.job_id ? `/jobs/${m.job_id}` : ''
-      backTo.value = m.job_id ? `/jobs/talks` : ''
-      return
+      backTo.value = m.job_id ? `/jobs/talks` : "";
+      return;
     }
-  } catch {/* フォールバックへ */}
+  } catch {
+    /* フォールバックへ */
+  }
 
   // フォールバック：スレッド一覧から探す（互換）
   try {
-    const { data } = await http.get('/talks/threads', { params: { role:'seeker', userId }})
-    const t = (data.items || []).find(x => x.id === threadId)
+    const { data } = await http.get("/talks/threads", { params: { role: "seeker", userId } });
+    const t = (data.items || []).find((x) => x.id === threadId);
     if (t) {
-      jobTitle.value = t.job_title || ''
-      businessName.value = t.business_name || ''
+      jobTitle.value = t.job_title || "";
+      businessName.value = t.business_name || "";
       // job_id が無い実装の場合は戻り先なし
-      backTo.value = ''
+      backTo.value = "";
     }
   } catch (e) {
     if (import.meta?.env?.DEV) {
-      console.debug('[SeekerTalkView] fallback /talks/threads failed', e)
+      console.debug("[SeekerTalkView] fallback /talks/threads failed", e);
     }
   }
-})
+});
 </script>
