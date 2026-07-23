@@ -166,8 +166,8 @@
                 <p>
                   介護の仕事を探している人と介護施設を結ぶ<br />
                   就活情報サイトです。<br />
-                  サイトの中に、3つのボタンがあるので、<br />
-                  ぜひ使ってみてください!
+                  サイトの中に、介護施設にあなたの思いを伝える<br />
+                  5つのボタンがあるので、ぜひ押してみてください!
                 </p>
               </div>
               <!-- クリップ -->
@@ -177,16 +177,18 @@
                 </div>
                 <div class="home-about-item-detail flex">
                   <div class="home-about-item-ico">
-                    <img src="/src/assets/images/home/clip.svg" />
+                    <img src="/src/assets/images/home/clip.png" />
                   </div>
                   <div class="home-about-item-txt">
                     <div class="home-about-item-name">
                       <img src="/src/assets/images/home/clip-name.svg" />
+                      <span class="home-about-item-name-sub home-about-item-name-sub--clip">
+                        気軽に保存
+                      </span>
                     </div>
-                    <p>
-                      相手とやりとりする前に<br />
-                      もう少し検討したい場合、<br />
-                      気軽に情報を保存できます
+                    <p class="home-about-item-desc home-about-item-desc">
+                      あとでもう一度見返したい求人を、<br />
+                      気軽に保存できます。
                     </p>
                   </div>
                 </div>
@@ -198,41 +200,91 @@
                 </div>
                 <div class="home-about-item-detail flex">
                   <div class="home-about-item-ico">
-                    <img src="/src/assets/images/home/good.svg" />
+                    <img src="/src/assets/images/home/good.png" />
                   </div>
                   <div class="home-about-item-txt">
                     <div class="home-about-item-name">
                       <img src="/src/assets/images/home/good-name.svg" />
+                      <span class="home-about-item-name-sub home-about-item-name-sub--good">
+                        施設に興味を伝える
+                      </span>
                     </div>
-                    <p>
-                      気になる求人情報にグッドを押すと<br />
-                      介護施設に通知!会話を始める<br />
-                      きっかけを作りましょう。
+                    <p class="home-about-item-desc home-about-item-desc">
+                      「興味があります」の気持ちを<br />
+                      施設へ伝えられます。<br />
+                      送信前に確認画面が表示されるので、安心して利用できます。
                     </p>
                   </div>
                 </div>
               </div>
               <!-- トーク -->
-              <div class="home-about-item">
+              <div class="home-about-item home-about-item--talk">
                 <div class="home-about-item-copy">
                   <img src="/src/assets/images/home/talk-copy.svg" />
                 </div>
+
                 <div class="home-about-item-detail flex">
                   <div class="home-about-item-ico">
                     <img src="/src/assets/images/home/talk.svg" />
                   </div>
+
                   <div class="home-about-item-txt">
-                    <div class="home-about-item-name">
+                    <div class="home-about-item-name home-about-item-name--with-sub">
                       <img src="/src/assets/images/home/talk-name.svg" />
+                      <span class="home-about-item-name-sub home-about-item-name-sub--talk">
+                        気軽に相談
+                      </span>
                     </div>
-                    <p>
-                      わからないことや不安なことなど<br />
-                      モヤモヤがあったら<br />
-                      気軽に質問してみましょう!
+
+                    <p class="home-about-item-desc home-about-item-desc">
+                      応募前でも、質問だけの利用でも<br />
+                      大丈夫。気になることを施設へ直<br />
+                      接相談できます。
                     </p>
                   </div>
                 </div>
+
+                <!-- 見学希望・応募する 説明枠 -->
+                <div class="home-talk-action-box">
+                  <div class="home-talk-action-row">
+                    <div class="home-talk-action-ico">
+                      <img src="/src/assets/images/home/visit.png" alt="見学希望" />
+                    </div>
+
+                    <div class="home-talk-action-text">
+                      <div class="home-talk-action-title">見学希望</div>
+                      <p>まずは見学してみたい</p>
+                    </div>
+                  </div>
+
+                  <div class="home-talk-action-row">
+                    <div class="home-talk-action-ico">
+                      <img src="/src/assets/images/home/Apply.png" alt="応募する" />
+                    </div>
+
+                    <div class="home-talk-action-text">
+                      <div class="home-talk-action-title">応募する</div>
+                      <p>さっそく応募してみたい</p>
+                    </div>
+                  </div>
+
+                  <p class="home-talk-action-lead">
+                    求人に対してボタンを押すだけで、<br />
+                    見学の希望や応募メッセージを<br />
+                    自動で入力できるから、文章に悩まなくてOK!
+                  </p>
+                </div>
+
+                <!-- 5つのボタン説明まとめ文 -->
+                <div class="home-action-summary">
+                  <p>
+                    あなたの一歩が、理想の職場との出会いに繋がります。<br />
+                    保存・興味を伝える・相談・見学・応募まで、<br />
+                    あなたのペースで就職活動を進められます。
+                  </p>
+                </div>
               </div>
+
               <!-- 使い方画面遷移ボタン -->
               <div class="btn-more maru">
                 <router-link to="/public/howtouse">もっと詳しく使い方をみる</router-link>
@@ -653,6 +705,203 @@ br.sp-only {
   text-align: center;
   font-size: 14px;
   color: #6b7280;
+}
+
+/* =========================================================
+   TALK内：見学希望・応募する説明枠
+========================================================= */
+.home-about-item--talk {
+  position: relative;
+}
+
+.home-about-item-name-sub--talk {
+  color: #ff9794;
+}
+
+.home-talk-action-box {
+  width: min(100%, 440px);
+  margin: 34px auto 0;
+  padding: 36px 34px 34px;
+  border: 2px solid #ff9794;
+  border-radius: 28px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.home-talk-action-row {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.home-talk-action-row + .home-talk-action-row {
+  margin-top: 30px;
+}
+
+.home-talk-action-ico {
+  flex: 0 0 110px;
+  width: 110px;
+  height: 110px;
+}
+
+.home-talk-action-ico img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.home-talk-action-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.home-talk-action-title {
+  color: #ff8c80;
+  font-size: 20px;
+  font-weight: 500;
+  /* line-height: 1.2; */
+  /* letter-spacing: 0.04em; */
+  /* margin-bottom: 10px; */
+}
+
+.home-talk-action-row:nth-of-type(2) .home-talk-action-title {
+  color: #ff8363;
+}
+
+/* .home-talk-action-text p {
+  margin: 0;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.7;
+  font-weight: 500;
+} */
+
+.home-talk-action-lead {
+  margin: 34px 0 0;
+  color: #333;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.9;
+  font-weight: 400;
+}
+
+/* スマホ調整 */
+@media screen and (max-width: 767px) {
+  .home-talk-action-box {
+    width: calc(100% - 32px);
+    margin-top: 28px;
+    padding: 28px 22px 28px;
+    border-radius: 24px;
+  }
+
+  .home-talk-action-row {
+    gap: 20px;
+  }
+
+  .home-talk-action-row + .home-talk-action-row {
+    margin-top: 26px;
+  }
+
+  .home-talk-action-ico {
+    flex-basis: 92px;
+    width: 92px;
+    height: 92px;
+  }
+
+  .home-talk-action-title {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .home-talk-action-text p {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .home-talk-action-lead {
+    margin-top: 28px;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+}
+
+/* =========================================================
+   5つのボタン説明まとめ文
+========================================================= */
+.home-action-summary {
+  margin: 74px auto 0;
+  text-align: center;
+  color: #333;
+  font-weight: 500;
+  font-size: 13px;
+  /* line-height: 2.2;
+  letter-spacing: 0.02em; */
+}
+
+/* .home-action-summary p {
+  margin: 0;
+}
+
+.home-action-summary p + p {
+  margin-top: 12px;
+} */
+
+/* =========================================================
+   クリップ・グッド・トーク 横補足テキスト
+========================================================= */
+.home-about-item-name {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.home-about-item-name img {
+  display: block;
+}
+
+.home-about-item-name-sub {
+  display: inline-block;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* クリップ：気軽に保存 */
+.home-about-item-name-sub--clip {
+  color: #ffb07b;
+  font-size: 15px;
+}
+
+/* グッド：施設に興味を伝える */
+.home-about-item-name-sub--good {
+  color: #ffa76c;
+  font-size: 14px;
+}
+
+/* トーク：気軽に相談 */
+.home-about-item-name-sub--talk {
+  color: #ff9794;
+  font-size: 14px;
+}
+
+/* 説明文のサイズ調整 */
+.home-about-item-desc {
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+@media screen and (max-width: 767px) {
+  .home-action-summary {
+    margin-top: 64px;
+    font-size: 15px;
+    line-height: 2.1;
+  }
+
+  .home-action-summary p + p {
+    margin-top: 15px;
+  }
 }
 
 /* スマホ：画像の下にテキストを縦並びに */

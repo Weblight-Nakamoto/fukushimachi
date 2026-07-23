@@ -1483,20 +1483,41 @@ watch(
 }
 
 .job-action-link.clip {
-  background-color: #ff8363;
-}
-
-.job-action-link.good {
-  background-color: #ff9c7d;
-}
-
-.job-action-link.talk,
-.job-action-link.inspection,
-.job-action-link.apply {
-  background-color: #ffb883;
+  background-color: #ffb07b;
   position: relative;
 }
 
+.job-action-link.good {
+  background-color: #ffa76c;
+}
+
+.job-action-link.talk {
+  background-color: #ff9794;
+  position: relative;
+}
+
+.job-action-link.inspection {
+  background-color: #ff8c80;
+  position: relative;
+}
+
+.job-action-link.apply {
+  background-color: #ff8363;
+  position: relative;
+}
+
+/* 右固定ボタン：区切り線の基準を各ボタン自身にする */
+.job-action-link {
+  position: relative;
+}
+
+/* クリップの上には区切り線を出さない */
+.job-action-link.clip::before {
+  content: none;
+}
+
+/* 2段目以降の上にだけ区切り線を出す */
+.job-action-link.good::before,
 .job-action-link.talk::before,
 .job-action-link.inspection::before,
 .job-action-link.apply::before {

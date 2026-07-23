@@ -39,7 +39,7 @@
         <li class="has-badge">
           <RouterLink :to="{ name: 'Jobs', query: { view: 'clips' } }">
             <span class="foot-nav-ico"><img :src="navClip" alt="クリップ" /></span>
-            <span class="foot-nav-txt">クリップ</span>
+            <span class="foot-nav-txt">クリップ<br />一覧</span>
           </RouterLink>
           <!-- <span v-if="badges.clips>0" class="count">{{ compact(badges.clips) }}</span> -->
         </li>
@@ -47,7 +47,7 @@
         <li class="has-badge">
           <RouterLink :to="{ name: 'Jobs', query: { view: 'goods' } }">
             <span class="foot-nav-ico"><img :src="navGood" alt="グッド" /></span>
-            <span class="foot-nav-txt">グッド</span>
+            <span class="foot-nav-txt">グッド<br />一覧</span>
           </RouterLink>
           <!-- <span v-if="badges.goods>0" class="count">{{ compact(badges.goods) }}</span> -->
         </li>
@@ -55,7 +55,7 @@
         <li class="has-badge">
           <RouterLink :to="{ name: 'MyTalks' }">
             <span class="foot-nav-ico"><img :src="navTalk" alt="トーク" /></span>
-            <span class="foot-nav-txt">トーク</span>
+            <span class="foot-nav-txt">トーク<br />一覧</span>
           </RouterLink>
           <span v-if="badges.talks > 0" class="count">{{ compact(badges.talks) }}</span>
         </li>
@@ -76,7 +76,7 @@
         <li class="has-badge">
           <RouterLink :to="{ name: 'BizGoodsList' }">
             <span class="foot-nav-ico"><img :src="navGood" alt="グッド" /></span>
-            <span class="foot-nav-txt">グッド</span>
+            <span class="foot-nav-txt">グッド<br />一覧</span>
           </RouterLink>
           <!-- <span v-if="badges.bizGoods>0" class="badge-unread">{{ compact(badges.bizGoods) }}</span> -->
           <span v-if="badges.bizGoods > 0" class="count">{{ compact(badges.bizGoods) }}</span>
@@ -85,7 +85,7 @@
         <li class="has-badge">
           <RouterLink :to="{ name: 'BizTalkList' }">
             <span class="foot-nav-ico"><img :src="navTalk" alt="トーク" /></span>
-            <span class="foot-nav-txt">トーク</span>
+            <span class="foot-nav-txt">トーク<br />一覧</span>
           </RouterLink>
           <!-- <span v-if="badges.bizTalks>0" class="badge-unread">{{ compact(badges.bizTalks) }}</span> -->
           <span v-if="badges.bizTalks > 0" class="count">{{ compact(badges.bizTalks) }}</span>
