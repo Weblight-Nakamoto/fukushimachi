@@ -135,6 +135,7 @@
                 :image-base="IMAGE_BASE"
                 @toggle-clip="onToggleClip"
                 @toggle-good="onToggleGood"
+                @open-talk="onOpenTalk"
                 @require-auth="onRequireAuth"
               />
               <div v-if="!list.length" class="empty">条件に一致する求人がありません。</div>
@@ -181,15 +182,9 @@
             <ToastModal v-model:open="toastOpen" :message="toastMsg" :auto-close-ms="1800" />
             <ConfirmGoodModal
               v-model:open="goodConfirmOpen"
-              :job-title="pendingGoodItem?.title || ''"
-              :facility-name="pendingGoodItem?.facility_name || ''"
               @confirm="confirmGood"
-              @cancel="
-                () => {
-                  pendingGoodItem = null;
-                  pendingGoodDone = null;
-                }
-              "
+              @cancel="cancelGood"
+            />
             />
             <!-- ✅ 未ログイン時の登録促し（ToastModalは使わない） -->
             <!-- <div
@@ -660,6 +655,11 @@ async function onToggleGood(item, done) {
   goodConfirmOpen.value = true;
 }
 
+function cancelGood() {
+  goodConfirmOpen.value = false;
+  pendingGood.value = null;
+}
+
 // ▼ 追加：モーダルで「グッドする」押下時
 async function confirmGood() {
   const ctx = pendingGood.value;
@@ -772,6 +772,52 @@ function onRequireAuth(payload) {
     // 任意：登録後に戻れるように next を付けたい場合
     query: { next: route.fullPath, jobId: jobId || undefined },
   });
+}
+
+async function onOpenTalk(item) {
+  if (!userId) {
+    alert("トークにはログインが必要です。");
+    return;
+  }
+
+  if (!item?.id) {
+    console.error("求人IDが取得できません", item);
+    showToast("求人情報を取得できませんでした");
+    return;
+  }
+
+  try {
+    const { data } = await API.post("/talks/start", {
+      job_information_id: item.id,
+      seeker_user_id: userId,
+    });
+
+    const threadId = data?.threadId || data?.id;
+
+    if (!threadId) {
+      console.error("threadIdが返されていません", data);
+      showToast("トーク開始に失敗しました");
+      return;
+    }
+
+    await router.push({
+      name: "SeekerTalk",
+      params: {
+        threadId,
+      },
+    });
+  } catch (e) {
+    const code = e?.response?.data?.error;
+
+    if (code === "job_not_found") {
+      showToast("求人が見つかりません");
+    } else if (code === "business_profile_not_found") {
+      showToast("施設情報が未設定のためトークを開始できません");
+    } else {
+      console.error("talk start failed", e);
+      showToast("トーク画面を開けませんでした");
+    }
+  }
 }
 </script>
 

@@ -55,7 +55,7 @@
                 <span v-if="categoryText">{{ categoryText }}</span>
               </div>
 
-              <!-- 画像スライダー（最大4枚） -->
+              <!-- 画像スライダー -->
               <section v-if="images.length" class="news-body" role="region" aria-label="掲載画像">
                 <div
                   class="slides"
@@ -74,6 +74,8 @@
                     <img :src="img.url" alt="" @load="onImgLoad($event, img)" />
                   </figure>
                 </div>
+
+                <p class="image-zoom-note">※画像をクリックすると拡大します</p>
               </section>
 
               <!-- 本文 -->
@@ -851,5 +853,13 @@ watch(
 }
 .news-detail.is-feature .body :deep(figure.ann-img figcaption) {
   margin-top: -50px;
+}
+
+.image-zoom-note {
+  margin: 8px 0 0;
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.6;
 }
 </style>

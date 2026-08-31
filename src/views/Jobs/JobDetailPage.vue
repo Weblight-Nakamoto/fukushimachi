@@ -252,8 +252,8 @@
         <button
           type="button"
           class="job-action-link talk"
-          :class="{ active: talked }"
-          :disabled="talkProcessing || applying || visiting"
+          :class="{ 'is-processing': talkProcessing }"
+          :disabled="talkProcessing"
           @click="onActionTalk"
         >
           <img src="/src/assets/images/common/ico-talk.svg" alt="" />
@@ -263,10 +263,10 @@
         <button
           type="button"
           class="job-action-link inspection"
-          :disabled="talkProcessing || applying || visiting"
+          :class="{ 'is-processing': visiting }"
+          :disabled="visiting"
           @click="visitJob"
         >
-          <!-- <span class="job-action-icon-text">見</span> -->
           <img src="/src/assets/images/common/inspection.svg" alt="" />
           <span>{{ visiting ? "遷移中…" : "見学希望" }}</span>
         </button>
@@ -274,10 +274,10 @@
         <button
           type="button"
           class="job-action-link apply"
-          :disabled="talkProcessing || applying || visiting"
+          :class="{ 'is-processing': applying }"
+          :disabled="applying"
           @click="applyToJob"
         >
-          <!-- <span class="job-action-icon-text">応</span> -->
           <img src="/src/assets/images/common/apply.svg" alt="" />
           <span>{{ applying ? "遷移中…" : "応募する" }}</span>
         </button>
@@ -1537,9 +1537,15 @@ watch(
   filter: brightness(0) invert(1);
 }
 
-.job-action-link:disabled {
-  opacity: 0.75;
-  cursor: not-allowed;
+@media screen and (max-width: 800px) {
+  .job-action-link:disabled {
+    opacity: 1;
+  }
+
+  .job-action-link.is-processing {
+    filter: brightness(0.78);
+    transform: scale(0.95);
+  }
 }
 
 .job-action-icon-text {
@@ -1619,5 +1625,25 @@ watch(
   .job-action-link.apply {
     border-bottom-left-radius: 15px;
   }
+}
+
+/* =========================================================
+   アクションボタン押下中
+========================================================= */
+.job-action-link.is-processing {
+  opacity: 1 !important;
+  filter: brightness(0.8);
+  transform: scale(0.96);
+}
+
+.job-action-link.is-processing img {
+  transform: scale(0.9);
+}
+
+.job-action-link {
+  transition:
+    transform 0.12s ease,
+    filter 0.12s ease,
+    opacity 0.12s ease;
 }
 </style>

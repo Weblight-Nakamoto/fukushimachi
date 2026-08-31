@@ -267,13 +267,12 @@ function onToggleGood() {
     emit("require-auth");
     return;
   }
-  const next = !localGooded.value;
-  let usedCb = false;
+
   emit("toggle-good", props.item, (v) => {
-    usedCb = true;
-    localGooded.value = typeof v === "boolean" ? v : next;
+    if (typeof v === "boolean") {
+      localGooded.value = v;
+    }
   });
-  if (!usedCb) localGooded.value = next;
 }
 function onOpenTalk() {
   if (!isAuthed.value) {

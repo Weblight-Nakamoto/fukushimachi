@@ -103,12 +103,16 @@
                   </div>
                 </div>
 
-                <div class="thumbs" v-if="files.length">
-                  <div v-for="(f, i) in files" :key="f.uid" class="thumb">
-                    <img :src="f.preview" alt="" />
-                    <button type="button" class="thumb-del" @click="removeFile(i)">×</button>
-                    <div class="thumb-cap">#{{ i + 1 }}</div>
+                <div v-if="files.length">
+                  <div class="thumbs">
+                    <div v-for="(f, i) in files" :key="f.uid" class="thumb">
+                      <img :src="f.preview" alt="" />
+                      <button type="button" class="thumb-del" @click="removeFile(i)">×</button>
+                      <div class="thumb-cap">#{{ i + 1 }}</div>
+                    </div>
                   </div>
+
+                  <p class="image-zoom-note">※画像をクリックすると拡大します</p>
                 </div>
               </div>
 
@@ -265,7 +269,7 @@
                 <dl class="conf-item">
                   <dt>お知らせ本文</dt>
                   <dd>
-                    <div class="preview-tabs">
+                    <!-- <div class="preview-tabs">
                       <button
                         type="button"
                         class="btn-mini"
@@ -282,7 +286,7 @@
                       >
                         HTML
                       </button>
-                    </div>
+                    </div> -->
 
                     <div
                       v-if="confirmTab === 'preview'"
@@ -357,7 +361,7 @@
                     :disabled="draftSaving || submitting"
                     @click="saveDraft"
                   >
-                    {{ draftSaving ? "保存中…" : "下書き保存" }}
+                    {{ draftSaving ? "保存中…" : "下書き保存  ※プレビューできます。" }}
                   </button>
                 </div>
 
@@ -1400,5 +1404,12 @@ async function saveDraft() {
   opacity: 0.6;
   box-shadow: none;
   cursor: not-allowed;
+}
+
+.image-zoom-note {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+  text-align: center;
 }
 </style>

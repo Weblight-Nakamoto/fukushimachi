@@ -355,7 +355,7 @@
                     :disabled="draftSaving || submitting"
                     @click="saveDraft"
                   >
-                    {{ draftSaving ? "保存中…" : "下書き保存" }}
+                    {{ draftSaving ? "保存中…" : "下書き保存  ※プレビューできます。" }}
                   </button>
                 </div>
 
