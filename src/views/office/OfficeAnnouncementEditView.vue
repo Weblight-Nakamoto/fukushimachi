@@ -771,9 +771,18 @@ function buildUpdateFormData({ draft = false } = {}) {
   const sums = summaries.value.map((s) => ({ heading: s.heading || "", content: s.content || "" }));
   fd.append("summaries", JSON.stringify(sums));
 
-  for (const it of files.value.slice(0, MAX_IMAGES)) fd.append("images", it.file);
+  // 新しいメイン画像が選択されている場合は、
+  // 既存画像を保持しない＝既存画像を削除して差し替える
+  if (files.value.length > 0) {
+    fd.append("keep_images", JSON.stringify([]));
+  }
 
-  // ★ 追加：下書きフラグ
+  // 新しいメイン画像を送信
+  for (const it of files.value.slice(0, MAX_IMAGES)) {
+    fd.append("images", it.file);
+  }
+
+  // 下書きフラグ
   fd.append("is_draft", draft ? "1" : "0");
 
   return fd;
