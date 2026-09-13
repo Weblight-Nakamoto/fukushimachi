@@ -156,7 +156,15 @@ const routes: RouteRecordRaw[] = [
   // TOPページ
   { path: "/", name: "TopGate", redirect: gateRedirect },
   // { path: '/public',   name: 'TopPublic',   component: TopPublicView, beforeEnter: (_to, _from, next) => next(gateRedirect()) },
-  { path: "/public", name: "TopPublic", component: TopPublicView },
+  {
+    path: "/public",
+    name: "TopPublic",
+    component: TopPublicView,
+    meta: {
+      title: "トップ",
+      description: "福島県の介護求人を探すなら「ふくしまち」。求人検索、特集、最新情報をチェック。",
+    },
+  },
   {
     path: "/seeker",
     name: "TopSeeker",
@@ -312,18 +320,23 @@ const routes: RouteRecordRaw[] = [
     path: "/seeker/howtouse",
     name: "seekerhowtouse",
     component: seekerhowtouseView,
-    meta: { requiresAuth: true },
+    meta: {
+      requiresAuth: true,
+      title: "使い方（求職者向け）",
+      description: "求職者向けに、求人の検索、トーク機能などの基本的な使い方をまとめています。",
+    },
   },
   {
     path: "/biz/howtouse",
     name: "bizhowtouseView",
     component: bizhowtouseView,
     meta: {
-      title: "サイトの使い方",
-      description: "ふくしまちの使い方。求人検索、クリップ、グッド、トークの利用方法を案内します。",
+      requiresAuth: true,
+      title: "使い方（事業者向け）",
+      description:
+        "事業者向けに、求人の登録・編集、応募者対応、トーク機能などの基本的な使い方をまとめています。",
     },
   },
-  // { path: '/biz/howtouse', name: 'bizhowtouseView', component: bizhowtouseView, meta: { requiresAuth: true } },
 
   // 事業者向け：自分の一覧
   {
@@ -507,7 +520,7 @@ const routes: RouteRecordRaw[] = [
   // 事務局用：/office は一覧へ（ログインページは使わない）
   { path: "/office", redirect: { name: "OfficeAnnouncementList" } },
   {
-    path: "/admin/officeCreate",
+    path: "/officeCreate",
     name: "OfficeAnnouncementCreateView",
     component: OfficeAnnouncementCreateView,
   },
@@ -522,7 +535,7 @@ const routes: RouteRecordRaw[] = [
     path: "/office/announcements/new",
     name: "OfficeAnnouncementCreate",
     component: OfficeAnnouncementCreateView,
-    alias: ["/admin/officeCreate"],
+    alias: ["/officeCreate"],
     meta: { requiresAuth: true },
   },
   {
@@ -632,13 +645,7 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-  scrollBehavior(to) {
-    // JobListPage restores scroll AFTER fetching and rendering its job cards.
-    // Returning false prevents the router from overwriting that position.
-    if (to.name === "Jobs") return false;
-    // Keep the existing behavior for every other page.
-    return { top: 0, left: 0 };
-  },
+  scrollBehavior: () => ({ top: 0, left: 0 }),
 });
 
 const SITE_NAME = "ふくしまち 介護求人・転職支援";

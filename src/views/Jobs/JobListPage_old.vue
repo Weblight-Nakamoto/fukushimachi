@@ -127,11 +127,6 @@
           <section class="l-sec">
             <section v-if="loading" class="loading">読み込み中…</section>
 
-            <section v-else-if="listError" class="loading" role="alert">
-              <p>{{ listError }}</p>
-              <button type="button" @click="retryList">再読み込み</button>
-            </section>
-
             <section v-else class="cards">
               <JobCard
                 v-for="it in list"
@@ -147,7 +142,7 @@
             </section>
 
             <!-- ▼ ページネーション -->
-            <nav v-if="!loading && !listError && totalPages > 1" class="pagination" aria-label="求人一覧のページネーション">
+            <nav v-if="totalPages > 1" class="pagination" aria-label="求人一覧のページネーション">
               <a
                 class="prev"
                 href="#"
@@ -219,20 +214,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 import axios from "axios";
 import FiltersModal from "@/components/jobs/FiltersModal.vue";
 import JobCard from "@/components/jobs/JobCard.vue";
 import ToastModal from "@/components/common/ToastModal.vue";
 // import { useRoute } from 'vue-router'
-import { useRoute, useRouter, onBeforeRouteLeave, onBeforeRouteUpdate } from "vue-router";
-import {
-  createDefaultJobFilters,
-  normalizeJobFilters,
-  jobListStateKey,
-  readJobListState,
-  writeJobListState,
-} from "@/utils/jobListState.js";
+import { useRoute, useRouter } from "vue-router";
 import ConfirmGoodModal from "@/components/common/ConfirmGoodModal.vue";
 // import { useRouter } from 'vue-router'
 
@@ -295,8 +283,7 @@ const total = ref(0);
 const page = ref(1);
 const perPage = 20;
 const sort = ref("newest"); // newest | oldest | views | clips
-const loading = ref(true);
-const listError = ref("");
+const loading = ref(false);
 
 // sort の表示名（ボタン表示用）
 const sortLabel = computed(() => {
@@ -484,12 +471,26 @@ function goPage(n) {
   const max = totalPages.value;
   if (n < 1 || n > max || n === page.value) return;
   page.value = n;
-  // fetchList restores/resets scroll only after the cards have been rendered.
-  fetchList();
+  fetchList().then(() => {
+    try {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch {
+      console.log();
+    }
+  });
 }
 
 // ✅ フィルタ項目（API側が受けるキーに合わせる: areas, cities）
-const filters = ref(createDefaultJobFilters());
+const filters = ref({
+  areas: [], // "県北" など
+  cities: [], // "福島市" など
+  employment_type_ids: [],
+  service_type_ids: [],
+  merit_ids: [],
+  job_position_ids: [],
+  salary_min: "",
+  salary_type: "",
+});
 
 // ---- 一覧側に表示する「選択中チップ」 ----
 const activeFilterChips = computed(() => {
@@ -562,7 +563,16 @@ function removeFilterChip(chip) {
 
 // 一括クリア（FiltersModal の clearAll 相当）
 function clearAllFilters() {
-  filters.value = createDefaultJobFilters();
+  filters.value = {
+    areas: [],
+    cities: [],
+    employment_type_ids: [],
+    service_type_ids: [],
+    merit_ids: [],
+    job_position_ids: [],
+    salary_min: "",
+    salary_type: "",
+  };
   page.value = 1;
   fetchList();
 }
@@ -580,66 +590,6 @@ const userId = (() => {
     return 0;
   }
 })();
-
-
-// ----- Preserve the public job list across detail navigation and reloads. -----
-let activeStateKey = "";
-let listScrollY = 0;
-let listReady = false;
-let mastersReady = false;
-let disposed = false;
-let listRequestId = 0;
-
-function restoreListState() {
-  activeStateKey = jobListStateKey(import.meta.env.BASE_URL, userId, effectiveView.value);
-  const saved = readJobListState(activeStateKey);
-  filters.value = normalizeJobFilters(saved?.filters);
-  page.value = saved?.page ?? 1;
-  sort.value = saved?.sort ?? "newest";
-  listScrollY = saved?.scrollY ?? 0;
-  listReady = false;
-  showFilters.value = false;
-  closeSort();
-}
-
-function saveListState(scrollY) {
-  if (!activeStateKey) return;
-  // Loading temporarily removes the cards; do not overwrite the saved position
-  // with the browser's clamped position while the list is still loading.
-  const y = typeof scrollY === "number"
-    ? scrollY
-    : listReady && !loading.value ? window.scrollY : listScrollY;
-  writeJobListState(activeStateKey, {
-    filters: filters.value,
-    page: page.value,
-    sort: sort.value,
-    scrollY: y,
-  });
-}
-
-// Do not use saveListState directly as an event callback: pagehide passes an Event.
-function onListPageHide() {
-  saveListState();
-}
-
-// Restore before the first API request, not after displaying an unfiltered list.
-restoreListState();
-onBeforeRouteLeave(() => {
-  saveListState();
-});
-onBeforeRouteUpdate(() => {
-  // This guard runs before route.query.view changes: save under the OLD key.
-  saveListState();
-});
-onMounted(() => {
-  window.addEventListener("pagehide", onListPageHide);
-});
-onBeforeUnmount(() => {
-  disposed = true;
-  listRequestId += 1;
-  window.removeEventListener("pagehide", onListPageHide);
-  // Do not save here: the router may already have changed the scroll position.
-});
 
 // ✅ トースト表示用
 const toastOpen = ref(false);
@@ -760,106 +710,53 @@ const queryParams = computed(() => {
   return params;
 });
 
-async function fetchList({ scrollY = 0 } = {}) {
-  const requestId = ++listRequestId;
-  const key = activeStateKey;
-  const isCurrent = () => !disposed && requestId === listRequestId &&
-    key === activeStateKey && route.name === "Jobs";
-  listScrollY = Math.max(0, Number(scrollY) || 0);
-  listReady = false;
+async function fetchList() {
   loading.value = true;
-  listError.value = "";
-  saveListState(listScrollY);
-
   try {
-    let { data } = await API.get("/jobs", { params: queryParams.value });
-    if (!isCurrent()) return;
-
-    // A job may have been unpublished while its detail page was open.
-    const lastPage = Math.max(1, Math.ceil((Number(data.total) || 0) / perPage));
-    if (page.value > lastPage) {
-      page.value = lastPage;
-      listScrollY = 0;
-      saveListState(0);
-      ({ data } = await API.get("/jobs", { params: queryParams.value }));
-      if (!isCurrent()) return;
-    }
-    total.value = Number(data.total) || 0;
-    list.value = Array.isArray(data.items) ? data.items : [];
-    loading.value = false;
-
-    // v-else replaces the loading section with the actual job cards.
-    await nextTick();
-    await new Promise((resolve) => {
-      window.requestAnimationFrame(() => window.requestAnimationFrame(resolve));
-    });
-    if (!isCurrent()) return;
-
-    const root = document.scrollingElement || document.documentElement;
-    const maxY = Math.max(0, root.scrollHeight - window.innerHeight);
-    // site.css sets smooth scrolling globally. Restore instantly, without animation.
-    window.scrollTo({ left: 0, top: Math.min(listScrollY, maxY), behavior: "instant" });
-    listReady = true;
-    listScrollY = window.scrollY;
-    saveListState(listScrollY);
-  } catch (error) {
-    if (!isCurrent()) return;
-    console.error("job list fetch failed", error);
-    listError.value = "求人情報を取得できませんでした。再読み込みしてください。";
+    const { data } = await API.get("/jobs", { params: queryParams.value });
+    console.log("first item:", data.items?.[0]);
+    total.value = data.total || 0;
+    list.value = data.items || [];
   } finally {
-    if (isCurrent()) loading.value = false;
-  }
-}
-
-async function loadMastersAndList() {
-  loading.value = true;
-  listError.value = "";
-  try {
-    const [et, st, me, wl, jp] = await Promise.all([
-      API.get("/masters/employment-types"),
-      API.get("/masters/service-types"),
-      API.get("/masters/merits"),
-      API.get("/masters/work-locations"),
-      API.get("/masters/job-positions"),
-    ]);
-    if (disposed || route.name !== "Jobs") return;
-    employmentTypes.value = et.data.items || [];
-    serviceTypes.value = st.data.items || [];
-    merits.value = me.data.items || [];
-    workLocations.value = wl.data.items || [];
-    jobPositions.value = jp.data.items || [];
-    mastersReady = true;
-    await fetchList({ scrollY: listScrollY });
-  } catch (error) {
-    if (disposed || route.name !== "Jobs") return;
-    console.error("job list masters fetch failed", error);
-    listError.value = "検索項目を取得できませんでした。再読み込みしてください。";
     loading.value = false;
   }
-}
-
-function retryList() {
-  if (!mastersReady) return loadMastersAndList();
-  return fetchList({ scrollY: listScrollY });
 }
 
 // ✅ FiltersModal からの apply を受け取る唯一のハンドラ
 function onApplyFilters(payload) {
-  filters.value = normalizeJobFilters(payload);
+  filters.value = { ...payload };
   page.value = 1;
   showFilters.value = false;
   fetchList();
 }
 
-onMounted(loadMastersAndList);
+onMounted(async () => {
+  const [et, st, me, wl, jp] = await Promise.all([
+    API.get("/masters/employment-types"),
+    API.get("/masters/service-types"),
+    API.get("/masters/merits"),
+    API.get("/masters/work-locations"),
+    API.get("/masters/job-positions"),
+  ]);
+  employmentTypes.value = et.data.items || [];
+  serviceTypes.value = st.data.items || [];
+  merits.value = me.data.items || [];
+  workLocations.value = wl.data.items || [];
+  jobPositions.value = jp.data.items || [];
+  fetchList();
 
-watch(effectiveView, () => {
-  // The route also changes when leaving for JobDetail. Never reload in that case.
-  if (route.name !== "Jobs" || disposed) return;
-  listRequestId += 1;
-  restoreListState();
-  if (mastersReady) fetchList({ scrollY: listScrollY });
+  // if (String(route.query.signup || '') === '1') {
+  //   showAuthToast.value = true
+  // }
 });
+// ?view= が変わったら再取得
+watch(
+  () => route.query.view,
+  () => {
+    page.value = 1;
+    fetchList();
+  },
+);
 
 function onRequireAuth(payload) {
   const jobId = Number(payload?.jobId ?? 0);
