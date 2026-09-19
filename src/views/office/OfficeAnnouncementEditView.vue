@@ -349,7 +349,7 @@
                     :disabled="submitting"
                     @click="submitEdit"
                   >
-                    {{ submitting ? "更新中…" : "更新する" }}
+                    {{ submitting ? "更新中…" : "更新して公開する" }}
                   </button>
                 </div>
                 <!-- ★ここを追加：確認画面で下書き保存 -->
@@ -865,7 +865,7 @@ async function saveDraft() {
     const fd = buildUpdateFormData({ draft: true });
     await http.put(`${API_BASE}/${id}`, fd, { headers: { "Content-Type": "multipart/form-data" } });
     isDraft.value = true;
-    alert("下書き保存しました（公開から下書きに戻しました）");
+    alert("下書き保存しました");
   } catch (e) {
     console.error("[office-ann:saveDraft] failed", e);
     alert("下書き保存に失敗しました");
@@ -897,18 +897,33 @@ async function submitEdit() {
   try {
     submitting.value = true;
 
-    const fd = buildUpdateFormData({ draft: false }); // ★ 公開（下書き解除）
+    // 公開（下書き解除）
+    const fd = buildUpdateFormData({ draft: false });
 
     const { data } = await http.put(`${API_BASE}/${id}`, fd, {
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
 
+    // ★ 休止中なら、公開時に休止も解除する
+    if (isPaused.value) {
+      await http.post(`${API_BASE}/${id}/pause`, {
+        paused: 0,
+        user_id: OFFICE_USER_ID,
+      });
+
+      isPaused.value = false;
+    }
+
     isDraft.value = false;
+
     done.value.url = resolvePublicUrl(data);
     step.value = "done";
+
     window.scrollTo({ top: 0 });
   } catch (e) {
-    console.error("[ann:edit] failed ", e);
+    console.error("[ann:edit] failed", e);
     alert("更新に失敗しました");
   } finally {
     submitting.value = false;
