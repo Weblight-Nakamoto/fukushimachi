@@ -742,9 +742,6 @@ watch(
   font-weight: 700;
   color: #111827;
   margin: 28px 0 12px;
-
-  padding-left: 12px;
-  border-left: 4px solid #333;
 }
 
 .news-detail.is-feature .body :deep(h2 + p) {

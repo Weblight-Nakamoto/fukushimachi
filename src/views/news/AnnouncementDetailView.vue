@@ -1162,9 +1162,6 @@ function imageUrl(p, idForFallback) {
   font-weight: 700;
   color: #111827;
   margin: 28px 0 12px;
-
-  padding-left: 12px;
-  border-left: 4px solid #333;
 }
 
 /* 見出し直後の段落の余白を少し詰めたい場合 */
