@@ -142,11 +142,16 @@
                       {{ MAX_INLINE_IMAGES }}）</span
                     >
                   </button>
-                  <button type="button" class="btn-mini" @click="insertHeading">
+                  <button type="button" class="btn-mini" @mousedown.prevent @click="insertHeading">
                     ＋見出し追加（H2）
                   </button>
-                  <button type="button" class="btn-mini" @click="addUnderline">＋下線追加</button>
-                  <button type="button" class="btn-mini" @click="insertLink">＋URLリンク</button>
+                  <button type="button" class="btn-mini" @mousedown.prevent @click="addUnderline">
+                    ＋下線追加
+                  </button>
+
+                  <button type="button" class="btn-mini" @mousedown.prevent @click="insertLink">
+                    ＋URLリンク
+                  </button>
                   <input
                     ref="inlinePicker"
                     type="file"
@@ -575,21 +580,61 @@ function removeSummary(i) {
   if (summaries.value.length > 1) summaries.value.splice(i, 1);
 }
 
-/** 本文ツールバー */
 function replaceSelection(html, collapseToEnd = true) {
   const el = bodyRef.value;
   if (!el) return;
+
+  // 現在のページスクロール位置を保存
+  const pageScrollX = window.scrollX;
+  const pageScrollY = window.scrollY;
+
+  // textarea内部のスクロール位置も保存
+  const textareaScrollTop = el.scrollTop;
+  const textareaScrollLeft = el.scrollLeft;
+
+  // 現在のカーソル・選択位置
   const s = el.selectionStart ?? 0;
   const e = el.selectionEnd ?? s;
+
   const before = form.value.body.slice(0, s);
   const after = form.value.body.slice(e);
+
+  // タグを挿入
   form.value.body = before + html + after;
+
   nextTick(() => {
-    el.focus();
+    const textarea = bodyRef.value;
+    if (!textarea) return;
+
     const pos = collapseToEnd ? before.length + html.length : before.length;
-    el.setSelectionRange(pos, pos);
+
+    // focusによるページスクロールを禁止
+    try {
+      textarea.focus({ preventScroll: true });
+    } catch {
+      textarea.focus();
+    }
+
+    // 挿入後のカーソル位置
+    textarea.setSelectionRange(pos, pos);
+
+    // textarea内部の位置を元に戻す
+    textarea.scrollTop = textareaScrollTop;
+    textarea.scrollLeft = textareaScrollLeft;
+
+    // ページ自体の位置も元に戻す
+    window.scrollTo(pageScrollX, pageScrollY);
+
+    // ブラウザがsetSelectionRange後に再スクロールする場合への対策
+    requestAnimationFrame(() => {
+      textarea.scrollTop = textareaScrollTop;
+      textarea.scrollLeft = textareaScrollLeft;
+
+      window.scrollTo(pageScrollX, pageScrollY);
+    });
   });
 }
+
 function wrapSelection(open, close, placeholder = "") {
   const el = bodyRef.value;
   if (!el) return;
@@ -600,7 +645,7 @@ function wrapSelection(open, close, placeholder = "") {
   replaceSelection(`${open}${inner}${close}`);
 }
 function insertHeading() {
-  wrapSelection("<h2>", "</h2>\n", "見出し");
+  wrapSelection("<h2>", "</h2>", "見出し");
 }
 function addUnderline() {
   wrapSelection("<u>", "</u>", "ここに下線");

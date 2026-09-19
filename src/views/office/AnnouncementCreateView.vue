@@ -721,7 +721,7 @@ function wrapSelection(open, close, placeholder = "") {
   replaceSelection(`${open}${inner}${close}`);
 }
 function insertHeading() {
-  wrapSelection("<h2>", "</h2>\n", "見出し");
+  wrapSelection("<h2>", "</h2>", "見出し");
 }
 function addUnderline() {
   wrapSelection("<u>", "</u>", "ここに下線");

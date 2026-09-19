@@ -291,7 +291,7 @@ const categoryText = computed(() => ann.value.category_name || ann.value.categor
 //   const sanitized = DOMPurify.sanitize(raw, { USE_PROFILES: { html: true } });
 
 //   // http(s) リンクの <a> に target="_blank" rel="noopener" を付与
-//   return sanitized.replace(
+//   const withLinks = sanitized.replace(
 //     /<a([^>]*?)href="(https?:\/\/[^"]+)"([^>]*)>/gi,
 //     (match, before, href, after) => {
 //       const attrs = before + after;
@@ -302,27 +302,47 @@ const categoryText = computed(() => ann.value.category_name || ann.value.categor
 //       return `<a${before}href="${href}"${after} target="_blank" rel="noopener">`;
 //     },
 //   );
+
+//   // ✅ figure の直前・直後にある「改行だけの空白」を消す（ここが効く）
+//   return withLinks.replace(/\s*(<figure\b[^>]*>)/gi, "$1").replace(/(<\/figure>)\s*/gi, "$1");
 // });
 
 const safeBodyHtml = computed(() => {
   const raw = String(ann.value.body || "");
-  const sanitized = DOMPurify.sanitize(raw, { USE_PROFILES: { html: true } });
+
+  const sanitized = DOMPurify.sanitize(raw, {
+    USE_PROFILES: { html: true },
+  });
 
   // http(s) リンクの <a> に target="_blank" rel="noopener" を付与
   const withLinks = sanitized.replace(
     /<a([^>]*?)href="(https?:\/\/[^"]+)"([^>]*)>/gi,
     (match, before, href, after) => {
       const attrs = before + after;
+
       if (/target\s*=/.test(attrs)) {
-        if (!/rel\s*=/.test(attrs)) return match.replace(/>$/, ' rel="noopener">');
+        if (!/rel\s*=/.test(attrs)) {
+          return match.replace(/>$/, ' rel="noopener">');
+        }
         return match;
       }
+
       return `<a${before}href="${href}"${after} target="_blank" rel="noopener">`;
     },
   );
 
-  // ✅ figure の直前・直後にある「改行だけの空白」を消す（ここが効く）
-  return withLinks.replace(/\s*(<figure\b[^>]*>)/gi, "$1").replace(/(<\/figure>)\s*/gi, "$1");
+  // figure の直前・直後にある改行・空白を除去
+  let cleaned = withLinks
+    .replace(/\s*(<figure\b[^>]*>)/gi, "$1")
+    .replace(/(<\/figure>)\s*/gi, "$1");
+
+  // H2直前にある改行・空白を除去
+  cleaned = cleaned.replace(/[ \t]*(?:\r?\n[ \t]*)+(<h2\b[^>]*>)/gi, "$1");
+
+  // H2直後にある改行・空白を除去
+  cleaned = cleaned.replace(/(<\/h2>)[ \t]*(?:\r?\n[ \t]*)+/gi, "$1");
+
+  return cleaned;
 });
 
 // ===== 関連求人（特集用） =====
@@ -718,13 +738,18 @@ watch(
 }
 
 /* 特集本文 微調整（必要なら） */
-.news-detail.is-feature .body :deep(h2) {
+/* 事務局・特集記事の本文中 h2 */
+.news-detail .body :deep(h2) {
   font-size: 20px;
   line-height: 1.4;
   font-weight: 700;
   color: #111827;
-  margin: 0px -5px -5px;
+  margin: 28px 0 12px;
+
+  padding-left: 12px;
+  border-left: 4px solid #333;
 }
+
 .news-detail.is-feature .body :deep(h2 + p) {
   margin-top: 6px;
 }

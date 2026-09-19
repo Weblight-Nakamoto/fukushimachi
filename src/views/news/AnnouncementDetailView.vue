@@ -1155,14 +1155,16 @@ function imageUrl(p, idForFallback) {
 }
 
 /* 特集（category_id = 4）本文中の h2 専用 */
-.news-detail.is-feature .body :deep(h2) {
-  font-size: 20px; /* お好みで */
+/* 事務局・特集記事の本文中 h2 */
+.news-detail .body :deep(h2) {
+  font-size: 20px;
   line-height: 1.4;
   font-weight: 700;
   color: #111827;
-  margin: 0px -5px -5px; /* ここで上下マージンを調整 */
-  /* padding-left: 10px;        デザイン例：左ライン */
-  /* border-left: 4px solid #6366f1; */
+  margin: 28px 0 12px;
+
+  padding-left: 12px;
+  border-left: 4px solid #333;
 }
 
 /* 見出し直後の段落の余白を少し詰めたい場合 */
