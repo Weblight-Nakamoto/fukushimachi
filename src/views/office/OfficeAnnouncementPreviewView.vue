@@ -657,12 +657,9 @@ watch(
 .slide img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
   object-position: center center;
-}
-.slide.is-portrait img {
-  object-position: top center;
 }
 
 /* 本文 */
