@@ -1482,6 +1482,39 @@ footer p {
 .operation {
   padding-top: 36px;
 }
+
+/* 開発・運営者*/
+.operation-text {
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.operation-text span {
+  display: block;
+}
+
+.operation-title {
+  font-size: 16px;
+}
+
+.operation-company {
+  padding-top: 4px;
+  padding-bottom: 3px;
+  font-size: 16px;
+}
+
+.operation-license {
+  padding-top: 4px;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.operation-tel {
+  font-size: 16px;
+  margin-top: 6px;
+  letter-spacing: 0.02em;
+}
+
 .btn-footer {
   padding: var(--padding-md) 0;
 }
@@ -4563,5 +4596,38 @@ section.l-sec.home-contact {
 
   body.is-job-detail-page .foot-nav span.foot-nav-txt {
     font-size: 10px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .operation {
+    padding-top: 28px;
+  }
+
+  .operation-text {
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .operation-title {
+    font-size: 14px;
+  }
+
+  .operation-company {
+    padding-top: 3px;
+    padding-bottom: 2px;
+    font-size: 14px;
+  }
+
+  .operation-license {
+    padding-top: 3px;
+    font-size: 9px;
+    line-height: 1.1;
+  }
+
+  .operation-tel {
+    font-size: 15px;
+    margin-top: 5px;
+    letter-spacing: 0.01em;
   }
 }

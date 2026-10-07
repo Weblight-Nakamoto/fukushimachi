@@ -12,9 +12,12 @@
         <img :src="fukushimaMark" alt="" />
       </div>
       <div class="operation">
-        <p>
-          【運営】<br />
-          株式会社INTALES
+        <p class="operation-text">
+          <span class="operation-title">【開発・運営】</span>
+          <span class="operation-company">株式会社INTALES</span>
+          <span class="operation-license">特定募集情報等提供事業者</span>
+          <span class="operation-license">届出受理番号：51-募-001624</span>
+          <span class="operation-tel">TEL.024-573-5810</span>
         </p>
       </div>
       <div class="consignor">
@@ -29,7 +32,8 @@
           href="http://wwwcms.pref.fukushima.jp/sec/01010d/koho-chosakuken.html"
           target="_blank"
           rel="noopener noreferrer"
-        >リンク・著作権・免責事項</a>
+          >リンク・著作権・免責事項</a
+        >
       </div>
       <p class="copyright">© Fukushima Prefecture. All Rights Reserved。</p>
     </div>
@@ -38,9 +42,9 @@
 
 <script setup>
 /* 画像は import 方式（Vite推奨） */
-import footerImg01 from '@/assets/images/common/footer-img01.png'
-import footerImg02 from '@/assets/images/common/footer-img02.png'
-import fukushimaMark from '@/assets/images/common/fukushim-jitsugen.png'
+import footerImg01 from "@/assets/images/common/footer-img01.png";
+import footerImg02 from "@/assets/images/common/footer-img02.png";
+import fukushimaMark from "@/assets/images/common/fukushim-jitsugen.png";
 </script>
 
 <style scoped>
