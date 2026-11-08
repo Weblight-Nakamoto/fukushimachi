@@ -949,19 +949,15 @@ function goBack() {
     return;
   }
 
-  // 2) アプリ内履歴があれば戻る
-  //   - vue-router4 では history.state.back があれば直前ルートがある可能性が高い
-  if (window.history.state && window.history.state.back) {
-    router.back();
-    return;
-  }
-  if (window.history.length > 1) {
+  // 2) Vue Router の履歴に直前のアプリ内ページがある場合だけ戻る
+  // history.length は外部サイトやメール画面の履歴も含むため使用しない
+  if (window.history.state?.back) {
     router.back();
     return;
   }
 
-  // 3) フォールバック：一覧へ
-  router.push({ name: "Jobs" });
+  // 3) メールやURLから直接開いた場合はTOPページへ
+  router.replace({ name: "TopGate" });
 }
 
 const headerH = ref(72); // 初期値は仮（端末により変わるので後で上書き）

@@ -226,9 +226,9 @@
             </router-link>
           </section> -->
 
-            <!-- 戻るボタン -->
+            <!-- 戻るボタン：直接アクセス時はTOPに移動 -->
             <div class="btn-back">
-              <a href="#" @click="$router.back()">
+              <a href="/" @click.prevent="goBack">
                 <span class="ico"><img src="/src/assets/images/common/ico-back.svg" /></span>
                 戻る
               </a>
@@ -381,6 +381,16 @@ const JOBS_API = "/jobs";
 
 /* ===== ルータ ===== */
 const route = useRoute();
+
+// アプリ内から来たときは元の画面へ。メールやURLからの直接アクセスはTOPへ。
+function goBack() {
+  if (window.history.state?.back) {
+    router.back();
+    return;
+  }
+  router.replace({ name: "TopGate" });
+}
+
 // const id = Number(route.params.id)
 const newsId = computed(() => Number(route.params.id));
 
